@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>测试 API 加载</title>
+</head>
+<body>
+  <h1>测试后端 API 加载</h1>
+  <button onclick="testApi()">测试 Swagger 接口</button>
+  <pre id="result"></pre>
+
+  <script>
+    async function testApi() {
+      const resultEl = document.getElementById('result')
+      resultEl.textContent = '正在加载...'
+      
+      try {
+        const response = await fetch('http://localhost:7001/api-docs/json')
+        const data = await response.json()
+        
+        const paths = Object.keys(data.paths || {})
+        const result = {
+          'Swagger 版本': data.openapi || data.swagger,
+          'API 路径数量': paths.length,
+          '前 10 个路径': paths.slice(0, 10)
+        }
+        
+        resultEl.textContent = JSON.stringify(result, null, 2)
+      } catch (error) {
+        resultEl.textContent = '错误：' + error.message
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+.body-editor {
+  width: 100%;
+}
+
+.body-editor-header {
+  margin-bottom: 16px;
+}
+
+.body-type-tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.json-editor {
+  width: 100%;
+}
+
+.json-textarea {
+  width: 100%;
+  min-height: 300px;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: var(--code-bg);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.5;
+  resize: vertical;
+  outline: none;
+
+  &:focus {
+    border-color: var(--primary-color);
+  }
+}
+
+.form-editor,
+.raw-editor {
+  padding: 40px;
+  text-align: center;
+  color: var(--text-secondary);
+}

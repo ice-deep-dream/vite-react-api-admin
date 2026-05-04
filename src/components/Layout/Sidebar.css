@@ -1,0 +1,42 @@
+.sidebar {
+  width: 240px;
+  background: var(--card-bg);
+  border-right: 1px solid var(--border-color);
+  transition: width var(--transition-slow);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.sidebar.collapsed {
+  width: 56px;
+}
+
+.sidebar.collapsed .group-sidebar {
+  display: none;
+}
+
+.group-sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.group-sidebar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.group-sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.group-sidebar::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: var(--radius-full);
+}
+
+.group-sidebar::-webkit-scrollbar-thumb:hover {
+  background: var(--text-tertiary);
+}
