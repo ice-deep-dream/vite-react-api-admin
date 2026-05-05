@@ -20,7 +20,7 @@ export function LoginPanel() {
   const fetchCaptchaData = useCallback(async () => {
     try {
       const baseUrl = getApiBaseUrl()
-      if (!baseUrl) {
+      if (baseUrl === null) {
         return { error: '请先在设置中配置 API 服务地址' }
       }
       const res = await fetch(buildApiUrl('/api/auth/captcha/img'))
@@ -198,7 +198,7 @@ export function LoginPanel() {
         </div>
       ) : (
         <form className="login-form" onSubmit={handleLogin}>
-          {!getApiBaseUrl() && (
+          {getApiBaseUrl() === null && (
             <div className="api-url-warning">
               <Settings size={14} />
               <span>未配置 API 服务地址，请先在设置中配置</span>

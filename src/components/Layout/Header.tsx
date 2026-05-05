@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import { Menu, Search, Settings, LogOut, Key, LogIn, ChevronDown, Star } from 'lucide-react'
 import { useProjectStore } from '@/stores/projectStore'
 import { useAuthStore } from '@/stores/authStore'
@@ -15,8 +15,26 @@ interface HeaderProps {
   onOpenSettings: () => void
 }
 
+function hasLoginApi(apiList: any[]): boolean {
+  return apiList.some((api) => {
+    const path = (api.path || '').toLowerCase()
+    const summary = (api.summary || '').toLowerCase()
+    const method = (api.method || '').toUpperCase()
+    return (
+      method === 'POST' &&
+      (path.includes('login') ||
+        path.includes('signin') ||
+        path.includes('auth') ||
+        summary.includes('登录') ||
+        summary.includes('login') ||
+        summary.includes('signin'))
+    )
+  })
+}
+
 export function Header({ onToggleSidebar, onOpenSettings }: HeaderProps) {
   const { globalToken } = useAuthStore()
+  const { apiList } = useApiStore()
   const { projects, activeProjectId, setActiveProject } = useProjectConfigStore()
   const isLoggedIn = !!globalToken
   const [showLoginPanel, setShowLoginPanel] = useState(false)
@@ -25,6 +43,11 @@ export function Header({ onToggleSidebar, onOpenSettings }: HeaderProps) {
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   const activeProject = projects.find((p) => p.id === activeProjectId)
+
+  const showLoginButton = useMemo(() => {
+    if (apiList.length === 0) return false
+    return hasLoginApi(apiList)
+  }, [apiList])
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -140,24 +163,26 @@ export function Header({ onToggleSidebar, onOpenSettings }: HeaderProps) {
         </div>
 
         <div className="header-right">
-          {isLoggedIn ? (
-            <button
-              className="auth-btn auth-btn-logged"
-              onClick={() => setShowLoginPanel(true)}
-              title="管理 Token"
-            >
-              <Key size={14} />
-              <span>Token</span>
-            </button>
-          ) : (
-            <button
-              className="auth-btn auth-btn-login"
-              onClick={() => setShowLoginPanel(true)}
-              title="登录"
-            >
-              <LogIn size={14} />
-              <span>登录</span>
-            </button>
+          {showLoginButton && (
+            isLoggedIn ? (
+              <button
+                className="auth-btn auth-btn-logged"
+                onClick={() => setShowLoginPanel(true)}
+                title="管理 Token"
+              >
+                <Key size={14} />
+                <span>Token</span>
+              </button>
+            ) : (
+              <button
+                className="auth-btn auth-btn-login"
+                onClick={() => setShowLoginPanel(true)}
+                title="登录"
+              >
+                <LogIn size={14} />
+                <span>登录</span>
+              </button>
+            )
           )}
           <button className="settings-btn" title="设置" onClick={onOpenSettings}>
             <Settings size={16} />

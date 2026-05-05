@@ -1,5 +1,5 @@
 interface IceApiDocConfig {
-  apiBaseUrl: string
+  apiBaseUrl: string | null
   swaggerJsonPath: string
   docTitle: string
 }
@@ -12,13 +12,17 @@ declare global {
 
 const STORAGE_KEY_API_BASE = 'ice-api-base-url'
 const STORAGE_KEY_SWAGGER_PATH = 'ice-swagger-json-path'
+const STORAGE_KEY_CONFIGURED = 'ice-api-configured'
 
-function getStoredApiBaseUrl(): string {
-  const stored = localStorage.getItem(STORAGE_KEY_API_BASE)
-  if (stored) return stored
+function getStoredApiBaseUrl(): string | null {
+  const isConfigured = localStorage.getItem(STORAGE_KEY_CONFIGURED)
+  if (isConfigured) {
+    const stored = localStorage.getItem(STORAGE_KEY_API_BASE)
+    return stored !== null ? stored : ''
+  }
   const configVal = window.__ICE_API_DOC_CONFIG__?.apiBaseUrl
-  if (configVal && configVal !== '__API_BASE_URL__') return configVal
-  return ''
+  if (configVal && configVal !== '__API_BASE_URL__') return configVal as string
+  return null
 }
 
 function getStoredSwaggerJsonPath(): string {
@@ -33,17 +37,25 @@ const config: IceApiDocConfig = {
   docTitle: window.__ICE_API_DOC_CONFIG__?.docTitle || 'ICE API文档',
 }
 
-export function getApiBaseUrl(): string {
+export function getApiBaseUrl(): string | null {
   return config.apiBaseUrl
 }
 
 export function setApiBaseUrl(url: string): void {
   config.apiBaseUrl = url
   localStorage.setItem(STORAGE_KEY_API_BASE, url)
+  localStorage.setItem(STORAGE_KEY_CONFIGURED, 'true')
+}
+
+export function resetApiConfig(): void {
+  config.apiBaseUrl = null
+  localStorage.removeItem(STORAGE_KEY_API_BASE)
+  localStorage.removeItem(STORAGE_KEY_CONFIGURED)
 }
 
 export function getSwaggerJsonPath(): string {
   const base = config.apiBaseUrl
+  if (base === null) return config.swaggerJsonPath
   const path = config.swaggerJsonPath
   if (base) {
     return `${base}${path.startsWith('/') ? '' : '/'}${path}`

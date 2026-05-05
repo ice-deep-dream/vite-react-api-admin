@@ -22,6 +22,14 @@ function parseSwaggerUrl(url: string): { baseUrl: string; path: string } {
   }
 }
 
+function syncRuntimeConfig(project: ApiProject | undefined) {
+  if (!project) return
+  const { baseUrl, path } = parseSwaggerUrl(project.swaggerJsonUrl)
+  const isLocalhost = baseUrl.includes('localhost') || baseUrl.includes('127.0.0.1')
+  setApiBaseUrl(isLocalhost ? '' : baseUrl)
+  setSwaggerJsonPath(path)
+}
+
 interface ProjectConfigState {
   projects: ApiProject[]
   activeProjectId: string | null
@@ -78,10 +86,7 @@ export const useProjectConfigStore = create<ProjectConfigStore>()(
         const project = get().projects.find((p) => p.id === id)
         if (project) {
           set({ activeProjectId: id })
-          const { baseUrl, path } = parseSwaggerUrl(project.swaggerJsonUrl)
-          const isLocalhost = baseUrl.includes('localhost') || baseUrl.includes('127.0.0.1')
-          setApiBaseUrl(isLocalhost ? '' : baseUrl)
-          setSwaggerJsonPath(path)
+          syncRuntimeConfig(project)
         }
       },
 
@@ -92,6 +97,12 @@ export const useProjectConfigStore = create<ProjectConfigStore>()(
     }),
     {
       name: 'project-config-storage',
+      onRehydrateStorage: () => (state) => {
+        if (state && state.activeProjectId) {
+          const activeProject = state.projects.find((p) => p.id === state.activeProjectId)
+          syncRuntimeConfig(activeProject)
+        }
+      },
     }
   )
 )

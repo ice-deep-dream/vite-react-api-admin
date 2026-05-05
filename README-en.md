@@ -12,6 +12,8 @@
 
 [English](README-en.md) | [中文](README.md)
 
+🌐 **Live Demo**: [http://api.admin.bingchihan.top/](http://api.admin.bingchihan.top/)
+
 </div>
 
 ---

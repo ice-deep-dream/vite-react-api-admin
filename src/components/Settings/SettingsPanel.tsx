@@ -69,7 +69,8 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
 
   const startAdd = () => {
     setShowAdd(true)
-    setEditName('')
+    const nextIndex = projects.length + 1
+    setEditName(`未命名项目${nextIndex}`)
     setEditSwaggerUrl('http://localhost:7001/api-docs/json')
     setTestStatus('idle')
     setTestMessage('')
@@ -240,7 +241,7 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
         className="settings-input settings-input-sm"
         value={editSwaggerUrl}
         onChange={(e) => setEditSwaggerUrl(e.target.value)}
-        placeholder="Swagger JSON 完整地址"
+        placeholder="请输入 API JSON 地址"
         onKeyDown={(e) => { if (e.key === 'Enter') handleSaveAndTest() }}
       />
       {isAdd && (

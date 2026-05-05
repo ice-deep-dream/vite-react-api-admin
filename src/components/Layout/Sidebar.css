@@ -10,7 +10,8 @@
 }
 
 .sidebar.collapsed {
-  width: 56px;
+  width: 0;
+  border-right: none;
 }
 
 .sidebar.collapsed .group-sidebar {
