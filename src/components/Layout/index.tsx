@@ -4,6 +4,7 @@ import { Sidebar } from './Sidebar'
 import { Main } from './Main'
 import { ApiTabs } from '../ApiExplorer/ApiTabs'
 import { SettingsPanel } from '../Settings/SettingsPanel'
+import { Footer } from './Footer'
 import './index.css'
 
 export function Layout() {
@@ -27,6 +28,7 @@ export function Layout() {
         isOpen={showSettings}
         onClose={() => setShowSettings(false)}
       />
+      <Footer />
     </div>
   )
 }

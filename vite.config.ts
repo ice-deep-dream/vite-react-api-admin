@@ -6,7 +6,7 @@ export default defineConfig(({ mode }) => {
   const isProd = mode === 'production'
   
   return {
-    base: isProd ? '/api/api-docs-ui/' : '/',
+    base: isProd ? '/' : '/',
     plugins: [react()],
     resolve: {
       alias: {
@@ -27,7 +27,7 @@ export default defineConfig(({ mode }) => {
       },
     },
     build: {
-      outDir: '../packages/ice-api-doc/client',
+      outDir: 'dist',
       emptyOutDir: true,
       assetsDir: 'assets',
     },
